@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekend Plans</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#111;
+    color:white;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+.password-box{
+    text-align:center;
+    margin-top:100px;
+}
+
+input{
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    width:250px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#ff4da6;
+    color:white;
+    cursor:pointer;
+}
+
+.cards{
+    display:grid;
+    gap:20px;
+}
+
+.card{
+    background:#222;
+    border-radius:15px;
+    overflow:hidden;
+    border:2px solid transparent;
+}
+
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.selected{
+    border:2px solid #ff4da6;
+}
+
+textarea{
+    width:100%;
+    margin-top:15px;
+    border-radius:10px;
+    padding:10px;
+    height:100px;
+}
+
+.hidden{
+    display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div id="loginPage" class="password-box">
+    <h1>Weekend Question 💕</h1>
+
+    <input id="password" placeholder="Enter Password">
+    <br><br>
+
+    <button onclick="checkPassword()">Continue</button>
+
+    <p id="error"></p>
+</div>
+
+<div id="mainPage" class="hidden">
+
+<h1>Which sounds the most fun? 😊</h1>
+
+<div class="cards">
+
+<div class="card" onclick="selectOption(this,'Coffee & Long Drive')">
+<img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200">
+<div class="card-content">
+<h2>☕ Coffee & Long Drive</h2>
+<p>Relaxing coffee and a nice drive together.</p>
+</div>
+</div>
+
+<div class="card" onclick="selectOption(this,'Dinner & Ice Cream')">
+<img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200">
+<div class="card-content">
+<h2>🍽️ Dinner & Ice Cream</h2>
+<p>Good food followed by sweet ice cream.</p>
+</div>
+</div>
+
+<div class="card" onclick="selectOption(this,'Movie At Home')">
+<img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200">
+<div class="card-content">
+<h2>🎬 Movie At Home</h2>
+<p>Movie, popcorn and drinks.</p>
+</div>
+</div>
+
+</div>
+
+<textarea id="message"
+placeholder="Anything else you'd like to say?"></textarea>
+
+<br><br>
+
+<button onclick="submitAnswer()">Submit</button>
+
+<p id="status"></p>
+
+</div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbw0w34QBvWXhBud4OmPco9DaKjUtPTj4V5lYoVqwku6a_VLgJI1_1-2g9OAC3zfNEV2/exec";
+
+let selectedOption="";
+
+function checkPassword(){
+
+    const pass=document.getElementById("password").value;
+
+    if(pass==="IRIS"){
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("mainPage").classList.remove("hidden");
+    }else{
+        document.getElementById("error").innerText="Wrong Password";
+    }
+}
+
+function selectOption(card,option){
+
+    document.querySelectorAll(".card").forEach(c=>{
+        c.classList.remove("selected");
+    });
+
+    card.classList.add("selected");
+    selectedOption=option;
+}
+
+async function submitAnswer(){
+
+    if(!selectedOption){
+        alert("Please select one option.");
+        return;
+    }
+
+    const message=document.getElementById("message").value;
+
+    await fetch(SCRIPT_URL,{
+        method:"POST",
+        body:JSON.stringify({
+            option:selectedOption,
+            message:message
+        })
+    });
+
+    document.getElementById("status").innerHTML=
+    "❤️ Thank you! Your answer has been submitted.";
+}
+
+</script>
+
+</body>
+</html>
